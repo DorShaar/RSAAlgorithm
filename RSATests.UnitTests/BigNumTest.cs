@@ -14,7 +14,7 @@ namespace RSATests.UnitTests
                var bigNum = new BigNum();
                bool isGood = true;
 
-               for (int i = 0; i < GlobalVariables.MAX_NUM; ++i)
+               for (int i = 0; i < BigNum.MaxDigitsNumber; ++i)
                {
                     if(bigNum[i] != 0)
                     {
@@ -37,16 +37,14 @@ namespace RSATests.UnitTests
                var bigNumToCompareWith = new BigNum();
                bool isGood = true;
 
-               List<int> positionsOf1s = new List<int> { GlobalVariables.MAX_NUM - 1,
-                                                         GlobalVariables.MAX_NUM - 3};
+               List<int> positionsOf1s = new List<int> { BigNum.MaxDigitsNumber - 1,
+                                                         BigNum.MaxDigitsNumber - 3};
                bigNum.ReadNum("0101");
                bigNum.ReadNum(positionsOf1s);
-               for (int i = 0; i < GlobalVariables.MAX_NUM; ++i)
+               for (int i = 0; i < BigNum.MaxDigitsNumber; ++i)
                {
                     if (bigNum[i] != bigNumToCompareWith[i])
-                    {
                          isGood = false;
-                    }
                }
 
                Assert.IsTrue(isGood);

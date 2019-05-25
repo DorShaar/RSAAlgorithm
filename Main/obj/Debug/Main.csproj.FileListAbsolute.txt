@@ -10,3 +10,9 @@ C:\Users\user\Desktop\ComputerInformationSecurity\Main\obj\Debug\Main.pdb
 C:\Users\user\Desktop\ComputerInformationSecurity\Main\bin\Debug\Main.exe
 C:\Users\user\Desktop\ComputerInformationSecurity\Main\bin\Debug\Main.pdb
 C:\Users\user\Desktop\ComputerInformationSecurity\Main\obj\Debug\Main.csprojResolveAssemblyReference.cache
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\Main\obj\Debug\Main.csproj.CoreCompileInputs.cache
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\Main\bin\Debug\Main.dll.config
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\Main\bin\Debug\Main.dll
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\Main\bin\Debug\Main.pdb
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\Main\obj\Debug\Main.dll
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\Main\obj\Debug\Main.pdb

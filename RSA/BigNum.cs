@@ -5,7 +5,7 @@ using System.Text;
 namespace RSA
 {
      /// <summary>
-     /// BigNum is a binary number in length of <GlobalVariables.MAX_NUM> digits.
+     /// BigNum is a binary number in length of <see cref="GlobalVariables.MaxDigitNumber"/> digits.
      /// Every instance of BigNum is initialize to 0.
      /// </summary>
      public class BigNum
@@ -14,18 +14,69 @@ namespace RSA
           private int? m1MSBLocation; // Contains the index of the most significant 1 in the binary number.
                                       // When <mBinaryNumber> = 0, then <m1MSBLocation> = null.
 
+          public const int MaxDigitsNumber = 400;
+          public const int MaxNumberOfDigitsInLongType = 63;
+
+          public static readonly BigNum Zero = new BigNum(0);
+          public static readonly BigNum One = new BigNum(1);
+          public static readonly BigNum Two = new BigNum(2);
+          public static readonly BigNum MinusOne = new BigNum(-1);
+
+          public int this[int key]
+          {
+               get { return mBinaryNumber[key]; }
+               set
+               {
+                    if ((value == 0) || (value == 1))
+                         mBinaryNumber[key] = value;
+                    else
+                         Console.WriteLine($"The {key} digit was not changed. {value} is not valid.");
+               }
+          }
+
+          public int Length
+          {
+               get
+               {
+                    if (m1MSBLocation.HasValue)
+                         return MaxDigitsNumber - m1MSBLocation.Value;
+                    else
+                         return 0;
+               }
+          }
+
+          public int? MSB1Location
+          {
+               get { return m1MSBLocation; }
+          }
+
+          public bool IsNegative
+          {
+               get { return (mBinaryNumber[0] == 1); }
+          }
+
+          public long? DecimalValue
+          {
+               get { return BigToLong(); }
+          }
+
+          public string BinaryValue
+          {
+               get { return WriteNum(); }
+          }
+
           public BigNum()
           {
-               mBinaryNumber = new int[GlobalVariables.MAX_NUM];
+               mBinaryNumber = new int[MaxDigitsNumber];
                InitializeToZero();
                m1MSBLocation = null;
           }
 
           public BigNum(BigNum bigNum)
           {
-               mBinaryNumber = new int[GlobalVariables.MAX_NUM];
+               mBinaryNumber = new int[MaxDigitsNumber];
 
-               for (int i = 0; i < GlobalVariables.MAX_NUM; ++i)
+               for (int i = 0; i < MaxDigitsNumber; ++i)
                {
                     mBinaryNumber[i] = bigNum.mBinaryNumber[i];
                }
@@ -35,21 +86,16 @@ namespace RSA
 
           public BigNum(long num)
           {
-               mBinaryNumber = new int[GlobalVariables.MAX_NUM];
+               mBinaryNumber = new int[MaxDigitsNumber];
                LongToBig(num);
           }
 
           private void InitializeToZero()
           {
-               for (int i = 0; i < GlobalVariables.MAX_NUM; ++i)
+               for (int i = 0; i < MaxDigitsNumber; ++i)
                {
                     mBinaryNumber[i] = 0;
                }
-          }
-
-          private bool IsBinaryDigit(char digit)
-          {
-               return ((digit == 0) || (digit == 1));
           }
 
           private bool IsBinaryNumber(string binaryNumber)
@@ -68,13 +114,18 @@ namespace RSA
                return isBinaryNumber;
           }
 
+          private bool IsBinaryDigit(char digit)
+          {
+               return ((digit == 0) || (digit == 1));
+          }
+
           private bool IsBigNumFitsIntoLongType(BigNum num)
           {
                bool isBigNumFitsIntoLongType;
                if (m1MSBLocation.HasValue)
                {
                     isBigNumFitsIntoLongType =
-                         (GlobalVariables.MAX_NUM - num.m1MSBLocation.Value <= GlobalVariables.MaxNumberOfDigitsInLongType);
+                         (MaxDigitsNumber - num.m1MSBLocation.Value <= MaxNumberOfDigitsInLongType);
                }
                else // It means that num is zero.
                {
@@ -89,7 +140,7 @@ namespace RSA
                int i = 0;
 
                m1MSBLocation = null;
-               while (i < GlobalVariables.MAX_NUM)
+               while (i < MaxDigitsNumber)
                {
                     if (mBinaryNumber[i] == 1)
                     {
@@ -103,7 +154,7 @@ namespace RSA
 
           public bool IsEven()
           {
-               return (mBinaryNumber[GlobalVariables.MAX_NUM - 1] == 0);
+               return (mBinaryNumber[MaxDigitsNumber - 1] == 0);
           }
 
           /// <summary>
@@ -115,13 +166,9 @@ namespace RSA
           {
                string binaryNumber = Console.ReadLine();
                if (!IsBinaryNumber(binaryNumber))
-               {
                     Console.WriteLine("The number is not binary");
-               }
                else
-               {
                     ReadNum(binaryNumber);
-               }
           }
 
           /// <summary>
@@ -135,14 +182,14 @@ namespace RSA
                int numberOfDigits = binaryNumber.Length;
                for (int i = 0; i < numberOfDigits; ++i)
                {
-                    mBinaryNumber[GlobalVariables.MAX_NUM - numberOfDigits + i] = (int)Char.GetNumericValue(binaryNumber[i]);
+                    mBinaryNumber[MaxDigitsNumber - numberOfDigits + i] = (int)Char.GetNumericValue(binaryNumber[i]);
                }
 
                // Note: if binaryNumber is negative, it has only 64 digits, so we need to fill the rest of the 1's
                // by ourselves.
-               if ((binaryNumber[0] == '1') && (binaryNumber.Length - 1 == GlobalVariables.MaxNumberOfDigitsInLongType))
+               if ((binaryNumber[0] == '1') && (binaryNumber.Length - 1 == MaxNumberOfDigitsInLongType))
                {
-                    for (int i = 0; i < GlobalVariables.MAX_NUM - numberOfDigits; ++i)
+                    for (int i = 0; i < MaxDigitsNumber - numberOfDigits; ++i)
                     {
                          mBinaryNumber[i] = 1;
                     }
@@ -159,10 +206,10 @@ namespace RSA
           public void ReadNum(List<int> positionsOf1s)
           {
                InitializeToZero();
-               int minPosition = GlobalVariables.MAX_NUM;
+               int minPosition = MaxDigitsNumber;
                foreach (int position in positionsOf1s)
                {
-                    if (position < GlobalVariables.MAX_NUM)
+                    if (position < MaxDigitsNumber)
                     {
                          mBinaryNumber[position] = 1;
                          minPosition = (minPosition > position) ? position : minPosition;
@@ -170,14 +217,10 @@ namespace RSA
                }
 
                // Updates <m1MSBLocation>.
-               if (minPosition == GlobalVariables.MAX_NUM)
-               {
+               if (minPosition == MaxDigitsNumber)
                     m1MSBLocation = null;
-               }
                else
-               {
                     m1MSBLocation = minPosition;
-               }
           }
 
           /// <summary>
@@ -213,7 +256,7 @@ namespace RSA
                }
                else
                {
-                    for (int pos = m1MSBLocation.Value; pos < GlobalVariables.MAX_NUM; ++pos)
+                    for (int pos = m1MSBLocation.Value; pos < MaxDigitsNumber; ++pos)
                     {
                          binaryNumber.Append(mBinaryNumber[pos]);
                     }
@@ -230,12 +273,10 @@ namespace RSA
           public List<int> WriteNum1sPosition()
           {
                List<int> positionOf1s = new List<int>();
-               for (int pos = 0; pos < GlobalVariables.MAX_NUM; ++pos)
+               for (int pos = 0; pos < MaxDigitsNumber; ++pos)
                {
                     if (mBinaryNumber[pos] == 1)
-                    {
                          positionOf1s.Add(pos);
-                    }
                }
 
                return positionOf1s;
@@ -252,13 +293,9 @@ namespace RSA
                string binaryNumber = Convert.ToString(num, toBase);
 
                if (binaryNumber != null)
-               {
                     ReadNum(binaryNumber);
-               }
                else
-               {
                     Console.WriteLine("Invalid long number given");
-               }
           }
 
           /// <summary>
@@ -280,7 +317,7 @@ namespace RSA
                {
                     // Make copyNumber represented as positive number.
                     copyNumber.Complement();
-                    copyNumber.AddNum(GlobalVariables.one);
+                    copyNumber.AddNum(One);
                     isNegative = true;
                }
 
@@ -288,15 +325,13 @@ namespace RSA
                {
                     longNumber = Convert.ToInt64(copyNumber.WriteNum(), fromBase);
                     if (isNegative)
-                    {
                          longNumber = -longNumber;
-                    }
                }
                else
                {
                     longNumber = null;
                     Console.WriteLine($"Convertion from BigNum to long is not possible," +
-                         $"this BigNum has more then {GlobalVariables.MaxNumberOfDigitsInLongType} digits");
+                         $"this BigNum has more then {MaxNumberOfDigitsInLongType} digits");
                }
 
                return longNumber;
@@ -316,7 +351,7 @@ namespace RSA
           {
                BigNum carry = new BigNum(); // <carry> = 00..0.
 
-               for(int i = GlobalVariables.MAX_NUM - 1; i > 0; --i)
+               for(int i = MaxDigitsNumber - 1; i > 0; --i)
                {
                     if (numberToAdd[i] + carry[i] == 1)
                     {
@@ -340,14 +375,10 @@ namespace RSA
                if (numberToAdd[0] + carry[0] == 1)
                {
                     if (mBinaryNumber[0] == 0)
-                    {
                          mBinaryNumber[0] = 1;
-                    }
                     else
-                    {
                          mBinaryNumber[0] = 0;
                          // Console.WriteLine("There is an overflow. Carry 1 is dropped.");
-                    }
                }
                else if (numberToAdd[0] + carry[0] == 2)
                {
@@ -372,21 +403,18 @@ namespace RSA
                     isOverflow = true;
                }
 
-               for(int i = 0; i < GlobalVariables.MAX_NUM - 1; ++i)
+               for(int i = 0; i < MaxDigitsNumber - 1; ++i)
                {
                     mBinaryNumber[i] = mBinaryNumber[i + 1];
                }
 
-               mBinaryNumber[GlobalVariables.MAX_NUM - 1] = 0;
+               mBinaryNumber[MaxDigitsNumber - 1] = 0;
+
                // Updates MSB1Location;
                if (isOverflow)
-               {
                     UpdateMSB1Location();
-               }
                else
-               {
                     m1MSBLocation--;
-               }
           }
 
           public void ShiftLeft(int times)
@@ -413,12 +441,10 @@ namespace RSA
           {
                BigNum valueToAdd = new BigNum(this);
                InitializeToZero();
-               for (int i = GlobalVariables.MAX_NUM - 1; i >= numberToMult.m1MSBLocation; --i)
+               for (int i = MaxDigitsNumber - 1; i >= numberToMult.m1MSBLocation; --i)
                {
                     if (numberToMult[i] == 1)
-                    {
                          AddNum(valueToAdd);
-                    }
 
                     valueToAdd.ShiftLeft();
                }
@@ -431,7 +457,7 @@ namespace RSA
           /// Gets another BigNum type number and compare between the two.
           /// </summary>
           /// <returns></returns>
-          public bool CompNum(BigNum numberToCompare)
+          public bool Compare(BigNum numberToCompare)
           {
                bool isEqual = true;
                bool isFinishCompare = false;
@@ -451,7 +477,7 @@ namespace RSA
 
                if (!isFinishCompare)
                {
-                    for(int i = m1MSBLocation.Value; i < GlobalVariables.MAX_NUM; ++i)
+                    for(int i = m1MSBLocation.Value; i < MaxDigitsNumber; ++i)
                     {
                          if (mBinaryNumber[i] != numberToCompare.mBinaryNumber[i])
                          {
@@ -462,46 +488,9 @@ namespace RSA
                }
 
                if (isEqual)
-               {
                     Console.WriteLine("The numbers are equal.");
-               }
                else
-               {
                     Console.WriteLine("The numbers are NOT equal.");
-               }
-
-               return isEqual;
-          }
-
-          public bool CompNumWithoutPrint(BigNum numberToCompare)
-          {
-               bool isEqual = true;
-               bool isFinishCompare = false;
-
-               if ((!m1MSBLocation.HasValue) && (!numberToCompare.m1MSBLocation.HasValue))
-               {
-                    // That means that they both equal to zero.
-                    isFinishCompare = true;
-               }
-               else if (((m1MSBLocation.HasValue) && (!numberToCompare.m1MSBLocation.HasValue)) ||
-                        ((!m1MSBLocation.HasValue) && (numberToCompare.m1MSBLocation.HasValue)))
-               {
-                    // That means that one is zero and other is not.
-                    isEqual = false;
-                    isFinishCompare = true;
-               }
-
-               if (!isFinishCompare)
-               {
-                    for (int i = m1MSBLocation.Value; i < GlobalVariables.MAX_NUM; ++i)
-                    {
-                         if (mBinaryNumber[i] != numberToCompare.mBinaryNumber[i])
-                         {
-                              isEqual = false;
-                              break;
-                         }
-                    }
-               }
 
                return isEqual;
           }
@@ -518,23 +507,19 @@ namespace RSA
                // numberToSubstract = B.
                BigNum modifiedNumberToSubtract = new BigNum(numberToSubtract);
                modifiedNumberToSubtract.Complement(); // numberToSubtract = -B - 1.
-               modifiedNumberToSubtract.AddNum(GlobalVariables.one); // numberToSubtract = -B.
+               modifiedNumberToSubtract.AddNum(One); // numberToSubtract = -B.
                AddNum(modifiedNumberToSubtract); // Allready updates <mMSB1Location>.
                UpdateMSB1Location();
           }
 
           public void Complement()
           {
-               for(int i = 0; i < GlobalVariables.MAX_NUM; ++i)
+               for(int i = 0; i < MaxDigitsNumber; ++i)
                {
                     if (mBinaryNumber[i] == 0)
-                    {
                          mBinaryNumber[i] = 1;
-                    }
                     else // (mBinaryNumber[i] == 1)
-                    {
                          mBinaryNumber[i] = 0;
-                    }
                }
 
                UpdateMSB1Location();
@@ -542,9 +527,10 @@ namespace RSA
 
           public void Set(BigNum bigNum)
           {
+               // TODO delete.
                m1MSBLocation = bigNum.m1MSBLocation;
                //mBinaryNumber = bigNum.mBinaryNumber;
-               for (int i = 0; i < GlobalVariables.MAX_NUM; ++i)
+               for (int i = 0; i < MaxDigitsNumber; ++i)
                {
                     mBinaryNumber[i] = bigNum.mBinaryNumber[i];
                }
@@ -576,84 +562,12 @@ namespace RSA
           public static bool operator <=(BigNum num1, BigNum num2)
           {
                bool isSmallEqual;
-               if(num1.CompNumWithoutPrint(num2))
-               {
+               if(num1.Compare(num2))
                     isSmallEqual = true;
-               }
                else
-               {
                     isSmallEqual = !(num1 >= num2);
-               }
 
                return isSmallEqual;
-          }
-
-          // Gets and Sets Methods.
-
-          public int this[int key]
-          {
-               get
-               {
-                    return mBinaryNumber[key];
-               }
-               set
-               {
-                    if ((value == 0) || (value == 1))
-                    {
-                         mBinaryNumber[key] = value;
-                    }
-                    else
-                    {
-                         Console.WriteLine($"The {key} digit was not changed. {value} is not valid.");
-                    }
-               }
-          }
-
-          public int Length
-          {
-               get
-               {
-                    if (m1MSBLocation.HasValue)
-                    {
-                         return GlobalVariables.MAX_NUM - m1MSBLocation.Value;
-                    }
-                    else
-                    {
-                         return 0;
-                    }
-               }
-          }
-
-          public int? MSB1Location
-          {
-               get
-               {
-                    return m1MSBLocation;
-               }
-          }
-
-          public bool IsNegative
-          {
-               get
-               {
-                    return (mBinaryNumber[0] == 1);
-               }
-          }
-
-          public long? DecimalValue
-          {
-               get
-               {
-                    return BigToLong();
-               }
-          }
-
-          public string BinaryValue
-          {
-               get
-               {
-                    return WriteNum();
-               }
           }
      }
 }

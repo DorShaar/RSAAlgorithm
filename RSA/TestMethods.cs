@@ -12,7 +12,7 @@ namespace RSA
         {
             Console.WriteLine("Creating new BigNum type number.");
             BigNum bigNum = new BigNum();
-            for (int i = 0; i < GlobalVariables.MAX_NUM; ++i)
+            for (int i = 0; i < BigNum.MaxDigitsNumber; ++i)
             {
                 Console.Write(bigNum[i]);
             }
@@ -147,19 +147,19 @@ namespace RSA
             Console.WriteLine("Comparing between zeroes.");
             BigNum bigNumH1 = new BigNum();
             BigNum bigNumH2 = new BigNum();
-            bigNumH1.CompNum(bigNumH2);
+            bigNumH1.Compare(bigNumH2);
 
             Console.WriteLine("Comparing between 8 and 16.");
             BigNum bigNumH3 = new BigNum(8L);
             BigNum bigNumH4 = new BigNum(16L);
-            bigNumH3.CompNum(bigNumH4);
+            bigNumH3.Compare(bigNumH4);
 
             Console.WriteLine("Comparing between 32 and 32.");
             BigNum bigNumH5 = new BigNum(32L);
             BigNum bigNumH6 = new BigNum();
             var positionsOf1sH = new List<int> { 394 };
             bigNumH6.ReadNum(positionsOf1sH);
-            bigNumH5.CompNum(bigNumH6);
+            bigNumH5.Compare(bigNumH6);
 
             Console.WriteLine();
         }
@@ -249,13 +249,13 @@ namespace RSA
             BigNum x = new BigNum(30);
             BigNum power = new BigNum(14);
             BigNum mod = new BigNum(7);
-            Console.WriteLine(MathOps.Power(x, power, mod).DecimalValue);
+            Console.WriteLine(MathOps.X2PowerYModZ(x, power, mod).DecimalValue);
 
             Console.WriteLine("Calculating 130^27 mod 41 = 24.");
             BigNum x2 = new BigNum(130);
             BigNum power2 = new BigNum(27);
             BigNum mod2 = new BigNum(41);
-            Console.WriteLine(MathOps.Power(x2, power2, mod2).DecimalValue);
+            Console.WriteLine(MathOps.X2PowerYModZ(x2, power2, mod2).DecimalValue);
 
             Console.WriteLine();
         }
@@ -294,7 +294,7 @@ namespace RSA
             BigNum power = new BigNum(8001);
             BigNum mod = new BigNum(1783369431);
             BigNum result = new BigNum();
-            result = MathOps.Power(num, power, mod);
+            result = MathOps.X2PowerYModZ(num, power, mod);
             Console.WriteLine(result.DecimalValue);
 
             Console.WriteLine();
@@ -311,8 +311,8 @@ namespace RSA
             {
                 List<int> positionsOf1s = new List<int> // Trusting that the number will have 100 binary digits.
                     {
-                         GlobalVariables.MAX_NUM - 100,
-                         GlobalVariables.MAX_NUM - 1
+                         BigNum.MaxDigitsNumber- 100,
+                         BigNum.MaxDigitsNumber - 1
                     };
                 int k = 20;
 
@@ -325,7 +325,7 @@ namespace RSA
                     Console.WriteLine();
                 }
 
-                primeNumberSuspect.AddNum(GlobalVariables.two);
+                primeNumberSuspect.AddNum(BigNum.Two);
             }
 
             Console.WriteLine();
@@ -339,16 +339,16 @@ namespace RSA
             //BigNum b = new BigNum();
             //List<int> bPositionsOf1s = new List<int>
             //{
-            //     GlobalVariables.MAX_NUM - 16 - 1,
-            //     GlobalVariables.MAX_NUM - 1
+            //     GlobalVariables.MaxDigitNumber - 16 - 1,
+            //     GlobalVariables.MaxDigitNumber - 1
             //};
             //b.ReadNum(bPositionsOf1s);
 
             BigNum b = new BigNum();
             List<int> bPositionsOf1s = new List<int>
             {
-                    GlobalVariables.MAX_NUM - 5 - 1,
-                    GlobalVariables.MAX_NUM - 1
+                    BigNum.MaxDigitsNumber - 5 - 1,
+                    BigNum.MaxDigitsNumber - 1
             };
             b.ReadNum(bPositionsOf1s);
             Console.Write("b = ");
@@ -357,11 +357,11 @@ namespace RSA
             BigNum plainText = new BigNum();
             List<int> plainTextPositionsOf1s = new List<int>
             {
-                GlobalVariables.MAX_NUM - 197 - 1,
-                GlobalVariables.MAX_NUM - 100 - 1,
-                GlobalVariables.MAX_NUM - 50 - 1,
-                GlobalVariables.MAX_NUM - 6 - 1,
-                GlobalVariables.MAX_NUM - 1 - 1
+                BigNum.MaxDigitsNumber - 197 - 1,
+                BigNum.MaxDigitsNumber - 100 - 1,
+                BigNum.MaxDigitsNumber - 50 - 1,
+                BigNum.MaxDigitsNumber - 6 - 1,
+                BigNum.MaxDigitsNumber - 1 - 1
             };
             plainText.ReadNum(plainTextPositionsOf1s);
             Console.Write("Encrypting the number: ");
@@ -383,7 +383,7 @@ namespace RSA
             BigNum decryptedText = MathOps.Decrypt(cipherText, a, n);
             MathOps.PrintNumberInPowersOfTwo(decryptedText);
 
-            plainText.CompNum(decryptedText);
+            plainText.Compare(decryptedText);
 
             Console.WriteLine();
         }
@@ -396,7 +396,7 @@ namespace RSA
 
             BigNum y = new BigNum(41008L);
             BigNum a = new BigNum(23425L);
-            BigNum x = MathOps.Power(y, a, n);
+            BigNum x = MathOps.X2PowerYModZ(y, a, n);
             Console.WriteLine(x.DecimalValue);
 
             //while (i<=n)

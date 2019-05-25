@@ -17,10 +17,10 @@ namespace RSA
                List<int> positionsOf1s = num.WriteNum1sPosition();
                for (int i = 0; i < positionsOf1s.Count - 1; ++i)
                {
-                    Console.Write($"2^{GlobalVariables.MAX_NUM - positionsOf1s[i] - 1} + ");
+                    Console.Write($"2^{BigNum.MaxDigitsNumber - positionsOf1s[i] - 1} + ");
                }
 
-               Console.WriteLine($"2^{GlobalVariables.MAX_NUM - positionsOf1s[positionsOf1s.Count - 1] - 1}");
+               Console.WriteLine($"2^{BigNum.MaxDigitsNumber - positionsOf1s[positionsOf1s.Count - 1] - 1}");
           }
                
           /// <summary>
@@ -42,31 +42,25 @@ namespace RSA
                     {
                          bool isSmaller = false;
                          List<int> PositionsOf1sList = new List<int>();
-                         for (int i = top.MSB1Location.Value; i < GlobalVariables.MAX_NUM; ++i)
+                         for (int i = top.MSB1Location.Value; i < BigNum.MaxDigitsNumber; ++i)
                          {
                               if (top[i] == 1)
                               {
                                    if (GenerateOneOrZero() == 0)
-                                   {
                                         isSmaller = true;
-                                   }
                                    else
-                                   {
                                         PositionsOf1sList.Add(i);
-                                   }
                               }
                               else
                               {
                                    if ((GenerateOneOrZero() == 1) && (isSmaller))
-                                   {
                                         PositionsOf1sList.Add(i);
-                                   }
                               }
                          }
 
                          generatedNumber.ReadNum(PositionsOf1sList);
-                    } while ((generatedNumber.CompNumWithoutPrint(GlobalVariables.zero)) ||
-                             (generatedNumber.CompNumWithoutPrint(top)));
+                    } while ((generatedNumber.Compare(BigNum.Zero)) ||
+                             (generatedNumber.Compare(top)));
                }
 
                return generatedNumber;
@@ -104,8 +98,8 @@ namespace RSA
                {
                     while (m.IsEven())
                     {
-                         DivNum(m, GlobalVariables.two, m, new BigNum());
-                         p.AddNum(GlobalVariables.one);
+                         DivNum(m, BigNum.Two, m, new BigNum());
+                         p.AddNum(BigNum.One);
                     }
 
                     k.Set(m);
@@ -131,7 +125,7 @@ namespace RSA
                {
                     if (divided[indexPos] == 1)
                     {
-                         positionsOf1s.Add(GlobalVariables.MAX_NUM - (initialIndexPos - indexPos) - 1);
+                         positionsOf1s.Add(BigNum.MaxDigitsNumber - (initialIndexPos - indexPos) - 1);
                     }
 
                     indexPos--;
@@ -146,7 +140,6 @@ namespace RSA
           /// Gets two BigNum type numbers, divided and divider.
           /// Returns by reference the result - quotient and reminder.
           /// </summary>
-          /// <param name="divider"></param>
           public static void DivNum(BigNum divided, BigNum divider, BigNum quotientRetrunByRef, BigNum reminderReturnByRef)
           {
                List<int> positionsOf1s = new List<int>();
@@ -156,7 +149,7 @@ namespace RSA
                     int indexPos = divided.MSB1Location.Value + divider.Length -1;
 
                     BigNum subResult = new BigNum(divided);
-                    while (indexPos < GlobalVariables.MAX_NUM)
+                    while (indexPos < BigNum.MaxDigitsNumber)
                     {
                          BigNum numberFromLeftToIndex = GetSubBigNumFromLeftToIndex(subResult, indexPos);
 
@@ -166,7 +159,7 @@ namespace RSA
                               positionsOf1s.Add(indexPos);
 
                               // Subtract.
-                              int numberOfShifts = GlobalVariables.MAX_NUM - indexPos - 1;
+                              int numberOfShifts = BigNum.MaxDigitsNumber - indexPos - 1;
                               BigNum numberToSubtract = new BigNum(divider);
                               numberToSubtract.ShiftLeft(numberOfShifts);
                               subResult.SubNum(numberToSubtract);
@@ -192,26 +185,21 @@ namespace RSA
           ///                               y is the opposite number of a(mod m).
           /// Proofe for Note: 1 = [m*x + a*y](mod m) ==> 1 = a*y.
           /// </summary>
-          /// <param name="a"></param>
-          /// <param name="m"></param>
-          /// <param name="x"></param>
-          /// <param name="y"></param>
-          /// <param name="d"></param>
           public static void ExtendedGCD(BigNum a, BigNum m, BigNum x, BigNum y, BigNum d)
           {
                BigNum r0 = new BigNum(m);
-               BigNum x0 = new BigNum(GlobalVariables.one);
-               BigNum y0 = new BigNum(GlobalVariables.zero);
+               BigNum x0 = new BigNum(BigNum.One);
+               BigNum y0 = new BigNum(BigNum.Zero);
 
                BigNum r1 = new BigNum(a);
-               BigNum x1 = new BigNum(GlobalVariables.zero);
-               BigNum y1 = new BigNum(GlobalVariables.one);
+               BigNum x1 = new BigNum(BigNum.Zero);
+               BigNum y1 = new BigNum(BigNum.One);
 
-               BigNum r = new BigNum(GlobalVariables.one); // Just to be able to enter the while loop.
+               BigNum r = new BigNum(BigNum.One); // Just to be able to enter the while loop.
                BigNum q = new BigNum();
                DivNum(r0, r1, q, r);
 
-               while (!r.CompNumWithoutPrint(GlobalVariables.zero))
+               while (!r.Compare(BigNum.Zero))
                {
                     // x = x0 - qx1.
                     BigNum qx1 = new BigNum(q);
@@ -246,19 +234,16 @@ namespace RSA
           /// Gets two BigNums, calculates the opposite number of a in mod m. ([a^-1][mod m]).
           /// Returns null if the a does not have an inverse mode m. (i.e: gcd(a, m) != 1).
           /// </summary>
-          /// <param name="a"></param>
-          /// <param name="m"></param>
           public static BigNum Inverse(BigNum a, BigNum m)
           {
                BigNum inverse = null;
                BigNum x = new BigNum();
                BigNum y = new BigNum();
                BigNum d = new BigNum(); // d will be gcd(a, m).
+
                ExtendedGCD(a, m, x, y, d);
-               if (d.CompNumWithoutPrint(GlobalVariables.one))
-               {
+               if (d.Compare(BigNum.One))
                     inverse = y;
-               }
 
                return inverse;
           }
@@ -268,13 +253,13 @@ namespace RSA
           /// Computes x to the power of y at mod z.
           /// </summary>
           /// <returns></returns>
-          public static BigNum Power(BigNum x, BigNum y, BigNum z)
+          public static BigNum X2PowerYModZ(BigNum x, BigNum y, BigNum z)
           {
                BigNum result = new BigNum();
                
-               if(y.CompNumWithoutPrint(GlobalVariables.zero))
+               if(y.Compare(BigNum.Zero))
                {
-                    result = new BigNum(GlobalVariables.one);
+                    result = new BigNum(BigNum.One);
                }
                else
                {
@@ -282,18 +267,18 @@ namespace RSA
                     {
                          // x^y = [x^(y/2)]^2 mod z.
                          BigNum yDividedBy2 = new BigNum();
-                         DivNum(y, GlobalVariables.two, yDividedBy2, result); // y = y/2.
-                         result = Power(x, yDividedBy2, z);
+                         DivNum(y, BigNum.Two, yDividedBy2, result); // y = y/2.
+                         result = X2PowerYModZ(x, yDividedBy2, z);
                          result.MultNum(new BigNum(result));
                          DivNum(result, z, new BigNum(), result);
                     }
                     else
                     {
                          BigNum yMinus1DividedBy2 = new BigNum(y);
-                         yMinus1DividedBy2.SubNum(GlobalVariables.one); // y = y-1.
+                         yMinus1DividedBy2.SubNum(BigNum.One); // y = y-1.
 
-                         DivNum(y, GlobalVariables.two, yMinus1DividedBy2, result); // y = y-1/2.
-                         result = Power(x, yMinus1DividedBy2, z);
+                         DivNum(y, BigNum.Two, yMinus1DividedBy2, result); // y = y-1/2.
+                         result = X2PowerYModZ(x, yMinus1DividedBy2, z);
                          result.MultNum(new BigNum(result));
                          DivNum(result, z, new BigNum(), result);
                          result.MultNum(x);
@@ -308,31 +293,29 @@ namespace RSA
           {
                bool isPrimeNumber = true;
                BigNum randomNumber = GenerateNumberFromOneToGivenTop(n);
-               BigNum x0 = Power(randomNumber, u, n);
+               BigNum x0 = X2PowerYModZ(randomNumber, u, n);
                BigNum x1 = new BigNum();
-               BigNum iterationNumber = new BigNum(GlobalVariables.one);
+               BigNum iterationNumber = new BigNum(BigNum.One);
 
                while (iterationNumber <= t) // Iterates t times.
                {
-                    x1 = Power(x0, GlobalVariables.two, n);
+                    x1 = X2PowerYModZ(x0, BigNum.Two, n);
                     x0.Set(x1);
-                    if ( (x1.CompNumWithoutPrint(GlobalVariables.one)) &&
-                         (!x0.CompNumWithoutPrint(GlobalVariables.one)) && 
-                         (!x0.CompNumWithoutPrint(GlobalVariables.minusOne)) )
+                    if ( (x1.Compare(BigNum.One)) &&
+                         (!x0.Compare(BigNum.One)) && 
+                         (!x0.Compare(BigNum.MinusOne)) )
                     {
                          isPrimeNumber = false;
                          break;
                     }
 
-                    iterationNumber.AddNum(GlobalVariables.one);
+                    iterationNumber.AddNum(BigNum.One);
                }
 
                if (isPrimeNumber)
                {
-                    if (!x1.CompNumWithoutPrint(GlobalVariables.one))
-                    {
+                    if (!x1.Compare(BigNum.One))
                          isPrimeNumber = false;
-                    }
                }
 
                return isPrimeNumber;
@@ -352,7 +335,7 @@ namespace RSA
                BigNum u = new BigNum();
                BigNum nMinusOne = new BigNum(n);
 
-               nMinusOne.SubNum(GlobalVariables.one);
+               nMinusOne.SubNum(BigNum.One);
                FindExpressionOfGivenNumberByPowerOfTwoTimesOddNumber(nMinusOne, t, u);
 
                for(int i = 0; i < k; ++i)
@@ -378,7 +361,7 @@ namespace RSA
                int k = 20;
                int tryNumber = 1;
                List<int> positionsOf1s = new List<int>();
-               for (int i = 392; i < GlobalVariables.MAX_NUM; ++i) // TODO change back.
+               for (int i = 392; i < BigNum.MaxDigitsNumber; ++i) // TODO change back.
                {
                     positionsOf1s.Add(i);
                }
@@ -402,11 +385,6 @@ namespace RSA
           /// n is calculated as p * q.
           /// Returns by reference the BigNum a, p, q, and n.
           /// </summary>
-          /// <param name="b"></param>
-          /// <param name="a"></param>
-          /// <param name="q"></param>
-          /// <param name="p"></param>
-          /// <param name="nByRef"></param>
           public static void GenRSA(BigNum b, BigNum a, BigNum q, BigNum p, BigNum nByRef)
           {
                bool isBInverseOfPMinus1AndQMinus1 = false;
@@ -418,22 +396,21 @@ namespace RSA
                     q.Set(GenPrime());
 
                     BigNum pMinus1 = new BigNum(p);
-                    pMinus1.SubNum(GlobalVariables.one);
+                    pMinus1.SubNum(BigNum.One);
                     BigNum qMinus1 = new BigNum(q);
-                    qMinus1.SubNum(GlobalVariables.one);
+                    qMinus1.SubNum(BigNum.One);
 
                     BigNum fiOfN = new BigNum(pMinus1);
                     fiOfN.MultNum(qMinus1);
                     BigNum gcd = new BigNum();
                     ExtendedGCD(b, fiOfN, new BigNum(), new BigNum(), gcd);
-                    if(gcd.CompNumWithoutPrint(GlobalVariables.one))
+                    if(gcd.Compare(BigNum.One))
                     {
                          isBInverseOfPMinus1AndQMinus1 = true;
                          a.Set(Inverse(b, fiOfN));
                          if(a.IsNegative)
-                         {
                               a.AddNum(fiOfN);
-                         }
+
                          n = new BigNum(p);
                          n.MultNum(q);
                     }
@@ -445,23 +422,17 @@ namespace RSA
           /// <summary>
           /// Encrypts given x with x^b mod n.
           /// </summary>
-          /// <param name="x"></param>
-          /// <param name="b"></param>
-          /// <returns></returns>
           public static BigNum Encrypt(BigNum x, BigNum b, BigNum n)
           {
-               return Power(x, b, n);
+               return X2PowerYModZ(x, b, n);
           }
 
           /// <summary>
           /// Decrypts given y with y^a mod n.
           /// </summary>
-          /// <param name="x"></param>
-          /// <param name="b"></param>
-          /// <returns></returns>
           public static BigNum Decrypt(BigNum y, BigNum a, BigNum n)
           {
-               return Power(y, a, n);
+               return X2PowerYModZ(y, a, n);
           }
      }
 }

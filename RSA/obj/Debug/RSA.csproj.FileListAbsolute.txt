@@ -16,3 +16,9 @@ C:\Users\user\Desktop\Study\אבטחת מידע ממוחשב\ComputerInformation
 C:\Users\user\Desktop\Study\אבטחת מידע ממוחשב\ComputerInformationSecurity\RSA\bin\Debug\RSA.exe
 C:\Users\user\Desktop\Study\אבטחת מידע ממוחשב\ComputerInformationSecurity\RSA\bin\Debug\RSA.pdb
 C:\Users\user\Desktop\Study\אבטחת מידע ממוחשב\ComputerInformationSecurity\RSA\obj\Debug\RSA.csprojResolveAssemblyReference.cache
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\RSA\bin\Debug\RSA.exe.config
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\RSA\bin\Debug\RSA.exe
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\RSA\bin\Debug\RSA.pdb
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\RSA\obj\Debug\RSA.csproj.CoreCompileInputs.cache
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\RSA\obj\Debug\RSA.exe
+C:\Users\Public\DorShaar\C#Work\RSAAlgorithm\RSA\obj\Debug\RSA.pdb
