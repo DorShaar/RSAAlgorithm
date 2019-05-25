@@ -1,0 +1,12 @@
+C:\Users\Dor Shaar\source\repos\ComputerInformationSecurity\Main\bin\Debug\Main.exe.config
+C:\Users\Dor Shaar\source\repos\ComputerInformationSecurity\Main\bin\Debug\Main.exe
+C:\Users\Dor Shaar\source\repos\ComputerInformationSecurity\Main\bin\Debug\Main.pdb
+C:\Users\Dor Shaar\source\repos\ComputerInformationSecurity\Main\obj\Debug\Main.csproj.CoreCompileInputs.cache
+C:\Users\Dor Shaar\source\repos\ComputerInformationSecurity\Main\obj\Debug\Main.exe
+C:\Users\Dor Shaar\source\repos\ComputerInformationSecurity\Main\obj\Debug\Main.pdb
+C:\Users\user\Desktop\ComputerInformationSecurity\Main\bin\Debug\Main.exe.config
+C:\Users\user\Desktop\ComputerInformationSecurity\Main\obj\Debug\Main.exe
+C:\Users\user\Desktop\ComputerInformationSecurity\Main\obj\Debug\Main.pdb
+C:\Users\user\Desktop\ComputerInformationSecurity\Main\bin\Debug\Main.exe
+C:\Users\user\Desktop\ComputerInformationSecurity\Main\bin\Debug\Main.pdb
+C:\Users\user\Desktop\ComputerInformationSecurity\Main\obj\Debug\Main.csprojResolveAssemblyReference.cache
